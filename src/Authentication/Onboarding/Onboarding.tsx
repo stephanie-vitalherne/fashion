@@ -9,9 +9,11 @@ import Animated, {
 import { interpolateColor, useScrollHandler } from "react-native-redash";
 
 // COMPONENTS
-import Slide, { SLIDE_HEIGHT, BORDER_RADIUS } from "./Slide";
+import Slide, { SLIDE_HEIGHT } from "./Slide";
 import Subslide from "./Subslide";
 import Dot from "./Dot";
+import { theme } from "../../components";
+import { Routes, StackNavigationProps } from "../../components/Navigation";
 
 const { width } = Dimensions.get("window");
 
@@ -23,7 +25,7 @@ const slides = [
       "Confused about your outfit? Don't worry! Find the best outfit here!",
     color: "#BFEAF5",
     picture: {
-      src: require("./assets/1.png"),
+      src: require("../assets/1.png"),
       width: 2513,
       height: 3583,
     },
@@ -35,7 +37,7 @@ const slides = [
       "Hating the clothes in your wardrobe? Explore hundreds of outfit ideas",
     color: "#BEECC4",
     picture: {
-      src: require("./assets/2.png"),
+      src: require("../assets/2.png"),
       width: 2791,
       height: 3744,
     },
@@ -46,7 +48,7 @@ const slides = [
     description: "Create your individual & unique style and amazing everyday",
     color: "#FFE4D9",
     picture: {
-      src: require("./assets/3.jpg"),
+      src: require("../assets/3.jpg"),
       width: 2738,
       height: 3244,
     },
@@ -58,14 +60,18 @@ const slides = [
       "Discover the latest trends in fashion and explore your personality",
     color: "#FFDDDD",
     picture: {
-      src: require("./assets/4.jpg"),
+      src: require("../assets/4.jpg"),
       width: 1757,
       height: 2551,
     },
   },
 ];
 
-const Onboarding = () => {
+export const assets = slides.map((slide) => slide.picture.src);
+
+const Onboarding = ({
+  navigation,
+}: StackNavigationProps<Routes, "Onboarding">) => {
   const scroll = useRef<Animated.ScrollView>(null);
   const { scrollHandler, x } = useScrollHandler();
   const backgroundColor = interpolateColor(x, {
@@ -92,9 +98,10 @@ const Onboarding = () => {
               <Image
                 source={picture.src}
                 style={{
-                  width: width - BORDER_RADIUS,
+                  width: width - theme.borderRadii.xl,
                   height:
-                    ((width - BORDER_RADIUS) * picture.height) / picture.width,
+                    ((width - theme.borderRadii.xl) * picture.height) /
+                    picture.width,
                 }}
               />
             </Animated.View>
@@ -135,20 +142,24 @@ const Onboarding = () => {
               transform: [{ translateX: multiply(x, -1) }],
             }}
           >
-            {slides.map(({ subtitle, description }, index) => (
-              <Subslide
-                key={index}
-                onPress={() => {
-                  if (scroll.current) {
-                    scroll.current
-                      .getNode()
-                      .scrollTo({ x: width * (index + 1), animated: true });
-                  }
-                }}
-                last={index === slides.length - 1}
-                {...{ subtitle, description }}
-              />
-            ))}
+            {slides.map(({ subtitle, description }, index) => {
+              const last = index === slides.length - 1;
+              return (
+                <Subslide
+                  key={index}
+                  onPress={() => {
+                    if (last) {
+                      navigation.navigate("Welcome");
+                    } else {
+                      scroll.current
+                        ?.getNode()
+                        .scrollTo({ x: width * (index + 1), animated: true });
+                    }
+                  }}
+                  {...{ subtitle, description, last }}
+                />
+              );
+            })}
           </Animated.View>
         </View>
       </View>
@@ -163,7 +174,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     height: SLIDE_HEIGHT,
-    borderBottomRightRadius: BORDER_RADIUS,
+    borderBottomRightRadius: theme.borderRadii.xl,
   },
   footer: {
     flex: 1,
@@ -171,11 +182,11 @@ const styles = StyleSheet.create({
   footerContent: {
     flex: 1,
     backgroundColor: "#fff",
-    borderTopLeftRadius: BORDER_RADIUS,
+    borderTopLeftRadius: theme.borderRadii.xl,
   },
   pagination: {
     ...StyleSheet.absoluteFillObject,
-    height: BORDER_RADIUS,
+    height: theme.borderRadii.xl,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "flex-end",
     alignItems: "center",
-    borderBottomRightRadius: BORDER_RADIUS,
+    borderBottomRightRadius: theme.borderRadii.xl,
     overflow: "hidden",
   },
 });
