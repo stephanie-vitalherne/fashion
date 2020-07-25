@@ -1,6 +1,11 @@
 import React, { useRef } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import Animated, { multiply, divide } from "react-native-reanimated";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
+import Animated, {
+  multiply,
+  divide,
+  interpolate,
+  Extrapolate,
+} from "react-native-reanimated";
 import { interpolateColor, useScrollHandler } from "react-native-redash";
 
 // COMPONENTS
@@ -17,7 +22,11 @@ const slides = [
     description:
       "Confused about your outfit? Don't worry! Find the best outfit here!",
     color: "#BFEAF5",
-    picture: require("./assets/1.png"),
+    picture: {
+      src: require("./assets/1.png"),
+      width: 2513,
+      height: 3583,
+    },
   },
   {
     title: "Playful",
@@ -25,14 +34,22 @@ const slides = [
     description:
       "Hating the clothes in your wardrobe? Explore hundreds of outfit ideas",
     color: "#BEECC4",
-    picture: require("./assets/2.png"),
+    picture: {
+      src: require("./assets/2.png"),
+      width: 2791,
+      height: 3744,
+    },
   },
   {
     title: "Eccentric",
     subtitle: "Your Style, Your Way",
     description: "Create your individual & unique style and amazing everyday",
     color: "#FFE4D9",
-    picture: require("./assets/3.jpg"),
+    picture: {
+      src: require("./assets/3.jpg"),
+      width: 2738,
+      height: 3244,
+    },
   },
   {
     title: "Funky",
@@ -40,7 +57,11 @@ const slides = [
     description:
       "Discover the latest trends in fashion and explore your personality",
     color: "#FFDDDD",
-    picture: require("./assets/4.jpg"),
+    picture: {
+      src: require("./assets/4.jpg"),
+      width: 1757,
+      height: 2551,
+    },
   },
 ];
 
@@ -55,6 +76,30 @@ const Onboarding = () => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.slider, { backgroundColor }]}>
+        {/* Image */}
+        {slides.map(({ picture }, index) => {
+          const opacity = interpolate(x, {
+            inputRange: [
+              (index - 0.5) * width,
+              index * width,
+              (index + 0.5) * width,
+            ],
+            outputRange: [0, 1, 0],
+            extrapolate: Extrapolate.CLAMP,
+          });
+          return (
+            <Animated.View key={index} style={[styles.underlay, { opacity }]}>
+              <Image
+                source={picture.src}
+                style={{
+                  width: width - BORDER_RADIUS,
+                  height:
+                    ((width - BORDER_RADIUS) * picture.height) / picture.width,
+                }}
+              />
+            </Animated.View>
+          );
+        })}
         <Animated.ScrollView
           ref={scroll}
           horizontal
@@ -134,6 +179,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  underlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    borderBottomRightRadius: BORDER_RADIUS,
+    overflow: "hidden",
   },
 });
 
