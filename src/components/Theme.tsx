@@ -6,8 +6,10 @@ const theme = {
     secondary: "#0C0D34",
     text: "#0C0D3470",
     text2: "#0C0D3410",
+    text3: "#0C0D3450",
     white: "#FFFFFF",
     grey: "#F4F0EF",
+    danger: "#FF0058",
   },
   spacing: {
     s: 8,
