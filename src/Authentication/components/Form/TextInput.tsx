@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
-  TextInput as RNTextInput,
   StyleSheet,
+  TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -40,6 +40,7 @@ const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
   };
 
   return (
+    // Container
     <Box
       flexDirection="row"
       height={48}
@@ -53,7 +54,7 @@ const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
         <Icon name={icon} size={16} {...{ color }} />
       </Box>
 
-      {/* Input */}
+      {/* Input Field */}
       <Box flex={1}>
         <RNTextInput
           underlineColorAndroid="transparent"
@@ -75,7 +76,7 @@ const TextInput = ({ icon, validator, ...props }: TextInputProps) => {
           <Icon
             name={state === Valid ? "check" : "x"}
             color="white"
-            size={12}
+            size={16}
           />
         </Box>
       )}

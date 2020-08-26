@@ -32,11 +32,12 @@ const Login = () => {
       </Box>
     </>
   );
+
   return (
     <Container {...{ footer }}>
       <Box padding="xl">
         <Text variant="title1" textAlign="center" marginBottom="l">
-          Welcome Back
+          Welcome back
         </Text>
         <Text variant="body" textAlign="center" marginBottom="l">
           Use your credentials below and login in your account
